@@ -3,23 +3,12 @@
 ## mkbusy command line examples
 
 ```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 90 >/dev/null &
-```
-
-```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 >/dev/null &
-```
-
-```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 2M --n-files 5 >/dev/null --cache 256 &
-```
-
-```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 2M --n-files 5 >/dev/null &
-```
-
-```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd >/dev/null &
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 90
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 2M --n-files 5 >/dev/null --cache 256
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 2M --n-files 5
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd 
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache 256 
 ```
 
 ## Type of tests

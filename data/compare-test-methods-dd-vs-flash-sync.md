@@ -1,4 +1,4 @@
-# Compare test method: dd vs flash-sync
+# Compare test methods: dd vs flash-sync
 
 ## rmmod,no-cache
 

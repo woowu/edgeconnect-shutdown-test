@@ -2,7 +2,8 @@
 'use strict';
 
 /**
- * Read EdgeConnect shutdown log printed on the console
+ * Read EdgeConnect shutdown logs organized in a md file and extract the timing
+ * information; then save the timing records in a combined csv file. 
  */
 
 import fs from 'node:fs';
@@ -16,6 +17,13 @@ import yargs from 'yargs/yargs';
 const argv = yargs(process.argv.slice(2))
     .version('0.0.1')
     .argv;
+
+function getSetupName(state)
+{
+    const comp = [state.setupL1];
+    if (state.setupL2) comp.push(state.setupL2);
+    return comp.join('/');
+}
 
 function processLogLineInSingleTest(state, line, lineNumber)
 {
@@ -62,7 +70,7 @@ function processLogLineInSingleTest(state, line, lineNumber)
         state.test.emmc = state.test.clock - state.test.emmcStart;
         const testIdx = state.test.idx;
         delete state.test.idx;
-        state.tests[state.setupL1 + '/' + state.setupL2][testIdx]
+        state.tests[getSetupName(state)][testIdx]
             = state.test;
         return;
     }
@@ -100,6 +108,11 @@ function processLogFile(filename)
             m = line.match(re);
             if (m) {
                 state.setupL1 = m[1];
+                /* I dont know there will be a lower level of setup name, so I
+                 * have to setup my object first. If the lower level appeared
+                 * later, the object can be value can be overwritten.
+                 */
+                state.tests[getSetupName(state)] = {};
                 return;
             }
 
@@ -107,7 +120,8 @@ function processLogFile(filename)
             m = line.match(re);
             if (m) {
                 state.setupL2 = m[1];
-                state.tests[state.setupL1 + '/' + state.setupL2] = {};
+                delete state.tests[state.setupL1];
+                state.tests[getSetupName(state)] = {};
                 return;
             }
 

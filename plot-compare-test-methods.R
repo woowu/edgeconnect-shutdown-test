@@ -11,22 +11,20 @@ palette <- brewer.pal(4, 'Set2')
 subtype <- c('Filesystem', 'WiFi', 'eMMC', 'Total')
 names(palette) <- subtype
 
-name = 'Compare test method: dd vs flash-sync'
+name = 'Compare test methods: dd vs flash-sync'
 d <- read.csv(paste('rpt/', name, '.csv', sep=''))
 total_max = max(d$Total)
 
-'000'
-setup1 <- d %>% filter(Setup == 'rmmod,no-cache/flash_sync');
-setup2 <- d %>% filter(Setup == 'rmmod,no-cache/dd');
+setup_names <- c('rmmod,no-cache/flash_sync', 'rmmod,no-cache/dd')
+setup1 <- d %>% filter(Setup == setup_names[1]);
+setup2 <- d %>% filter(Setup == setup_names[2]);
 
-'001'
 setup1_l <- melt(setup1, id.vars = c('Setup', 'Idx'),
             variable.name = 'Name',
             value.name = 'Time')
 setup2_l <- melt(setup2, id.vars = c('Setup', 'Idx'),
             variable.name = 'Name',
             value.name = 'Time')
-'002'
 
 svg(paste(name, '.svg', sep=''), width=14, height=7)
 p1 = ggplot(setup1_l, aes(x=Idx, y=Time, color=Name)) +
@@ -38,7 +36,7 @@ p1 = ggplot(setup1_l, aes(x=Idx, y=Time, color=Name)) +
     ylab('Time (ms)') +
     theme_bw() + 
     theme(legend.title=element_blank()) +
-    ggtitle('(a) old firmware, using flash_sync')
+    ggtitle(paste('(a) ', setup_names[1], sep=''))
 p2 = ggplot(setup2_l, aes(x=Idx, y=Time, color=Name)) +
     scale_color_manual(values=palette) +
     ylim(0, total_max) +
@@ -48,8 +46,8 @@ p2 = ggplot(setup2_l, aes(x=Idx, y=Time, color=Name)) +
     ylab('Time (ms)') +
     theme_bw() +
     theme(legend.title=element_blank()) +
-    ggtitle('(b) old firmware, using dd')
+    ggtitle(paste('(b) ', setup_names[2], sep=''))
 
-grid.arrange(p1, p2, nrow=1)
+grid.arrange(p1, p2, top=name, nrow=1)
 dev.off()
 save.image(file=paste(name, '.RData', sep=''))
