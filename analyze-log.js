@@ -13,34 +13,25 @@ import yargs from 'yargs/yargs';
 
 /*---------------------------------------------------------------------------*/
 
-var csv;
-
 const argv = yargs(process.argv.slice(2))
     .version('0.0.1')
-    .option('d', {
-        alias: 'dir',
-        description: 'directory of log files',
-        demandOption: true,
-    })
-    .option('o', {
-        alias: 'out',
-        description: 'output filename (csv)',
-        demandOption: true,
-    })
     .argv;
 
-function processLogLineInSingleTest(state, line)
+function processLogLineInSingleTest(state, line, lineNumber)
 {
     var re, m;
 
     re = /\[([0-9]+)\] (.*)/;
     m = line.match(re);
     if (! m) return;
-    const time = parseInt(m[1]) / 1000;
-    if (time < state.test.clock)
-        state.test.clock = time + 1000;
-    else
-        state.test.clock = time;
+    var time = parseInt(m[1]) / 1000 + state.test.clockHigh;
+    if (time < state.test.clock) {
+        console.log(`line ${lineNumber} detected time wrapping around:`
+            + ` ${state.test.clock} to ${time}`);
+        state.test.clockHigh += 1000;
+        time += 1000;
+    }
+    state.test.clock = time;
 
     const msg = m[2].trim();
 
@@ -69,9 +60,9 @@ function processLogLineInSingleTest(state, line)
     if (m) {
         state.test.total = state.test.clock - state.test.powerDownStart;
         state.test.emmc = state.test.clock - state.test.emmcStart;
-        const testId = state.test.id;
-        delete state.test.id;
-        state.tests[state.setupL1 + '/' + state.setupL2][testId]
+        const testIdx = state.test.idx;
+        delete state.test.idx;
+        state.tests[state.setupL1 + '/' + state.setupL2][testIdx]
             = state.test;
         return;
     }
@@ -91,8 +82,11 @@ function processLogFile(filename)
         const rl = readline.createInterface({
             input: fs.createReadStream(filename),
         });
+        var lineNumber = 0;
         rl.on('line', line => {
             var re, m;
+
+            ++lineNumber;
 
             re = /^# (.*)/;
             m = line.match(re);
@@ -121,17 +115,18 @@ function processLogFile(filename)
             m = line.match(re);
             if (m) {
                 state.test = {
-                    id: m[1],
+                    idx: m[1],
                     powerDownStart: 0,
                     emmcStart: 0,
                     filesystem: Infinity,
                     wifi: Infinity,
                     emmc: Infinity,
                     clock: 0,
+                    clockHigh: 0,
                 };
                 return;
             }
-            processLogLineInSingleTest(state, line);
+            processLogLineInSingleTest(state, line, lineNumber);
         });
 
         rl.on('close', () => {
@@ -140,6 +135,26 @@ function processLogFile(filename)
     });
 }
 
+function dumpState(state)
+{
+    delete state.test;
+    delete state.setupL1;
+    delete state.setupL2;
+    fs.writeFile(state.name + '.json', JSON.stringify(state, null, '  '),
+        () => {});
+}
+
 const filename = argv._[0];
 const state = await processLogFile(filename);
-console.log(JSON.stringify(state, null, '\t'));
+dumpState(state);
+const csv = fs.createWriteStream(state.name + '.csv');
+csv.write('Setup,Idx,Filesystem,WiFi,eMMC,Total\n');
+for (const setup in state.tests) {
+    const tests = state.tests[setup];
+    for (const idx in tests) {
+        const { filesystem, wifi, emmc, total } = tests[idx];
+        csv.write(`"${setup}",${idx},${filesystem.toFixed(3)},${wifi.toFixed(3)},`
+            + `${emmc.toFixed(3)},${total.toFixed(3)}\n`);
+    }
+}
+csv.end();

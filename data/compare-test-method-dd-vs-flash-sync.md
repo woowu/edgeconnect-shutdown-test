@@ -42,10 +42,10 @@ Test 03
 [103442] kill and syncfs
 [104069] syncfs
 [104480] turn off wifi using rmmod
-[197119] turn off wifi exited: 0
 [185088] syncfs done
 [187649] sync exited: 0
 [187912] shutdown eMMC
+[197119] turn off wifi exited: 0
 [203417] radio_continue_shutdown
 [203744] De-assert (low) EIC_REMAIN_ON
 
@@ -216,18 +216,19 @@ Test 14
 
 Test 15
 
-[799272] daemon_power_remove
-[799333] daemon_shutdown_sequence 2. timeout time 799334
-[802140] stop watchdogd
-[804662] kill and syncfs
-[805301] syncfs
-[805693] turn off wifi using rmmod
-[917169] turn off wifi exited: 0
-[863193] syncfs done
-[865124] sync exited: 0
-[865361] shutdown eMMC
-[875186] radio_continue_shutdown
-[875613] De-assert (low) EIC_REMAIN_ON
+[723748] daemon_power_remove
+[723808] daemon_shutdown_sequence 2. timeout time 723809
+[726674] stop watchdogd
+[729835] notify flash-sync-services: 0
+[730171] kill sync-iprf: 0
+[730229] syncfs
+[730637] turn off wifi using rmmod
+[807397] turn off wifi exited: 0
+[263755] syncfs done
+[268303] sync exited: 0
+[268614] shutdown eMMC
+[278544] radio_continue_shutdown
+[278908] De-assert (low) EIC_REMAIN_ON
 
 ### dd
 
