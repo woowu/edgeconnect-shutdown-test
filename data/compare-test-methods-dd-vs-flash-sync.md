@@ -4,6 +4,11 @@
 
 ### flash_sync
 
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 2M --n-files 5 
+```
+
 Test 01
 
 [403418] daemon_power_remove
@@ -231,6 +236,11 @@ Test 15
 [278908] De-assert (low) EIC_REMAIN_ON
 
 ### dd
+
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd
+```
 
 Test 01
 

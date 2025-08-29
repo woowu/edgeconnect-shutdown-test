@@ -2,6 +2,11 @@
 
 ## baseline
 
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd 
+```
+
 Test 01
 
 [713508] daemon_power_remove
@@ -234,6 +239,11 @@ Test 15
 [276555] De-assert (low) EIC_REMAIN_ON
 
 ## 256 KB cache
+
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache 256 
+```
 
 Test 01
 
@@ -708,4 +718,243 @@ Test 15
 [818159] shutdown eMMC
 [828183] radio_continue_shutdown
 [828502] De-assert (low) EIC_REMAIN_ON
+
+## rfkill
+
+Test 01
+
+[960945] daemon_power_remove
+[961037] daemon_shutdown_sequence 2. timeout time 961038
+[963635] turn off wifi using rfkill
+[964946] notify flash-sync-services: 0
+[965185] kill sync-iprf: 0
+[965235] syncfs
+[965591] stop watchdogd
+[011295] turn off wifi exited: 0
+[022940] syncfs done
+[027483] sync exited: 0
+[027860] shutdown eMMC
+[038189] radio_continue_shutdown
+[038571] De-assert (low) EIC_REMAIN_ON
+
+Test 02
+
+[571523] daemon_power_remove
+[571584] daemon_shutdown_sequence 2. timeout time 571585
+[574249] turn off wifi using rfkill
+[575559] notify flash-sync-services: 0
+[575743] kill sync-iprf: -1
+[575790] syncfs
+[576221] stop watchdogd
+[622965] turn off wifi exited: 0
+[652434] syncfs done
+[654411] sync exited: 0
+[654699] shutdown eMMC
+[664906] radio_continue_shutdown
+[665328] De-assert (low) EIC_REMAIN_ON
+
+Test 03
+
+[458947] daemon_power_remove
+[459032] daemon_shutdown_sequence 2. timeout time 459033
+[461647] turn off wifi using rfkill
+[463546] notify flash-sync-services: 0
+[463775] syncfs
+[464210] stop watchdogd
+[524308] turn off wifi exited: 0
+[585233] syncfs done
+[589724] sync exited: 0
+[590031] shutdown eMMC
+[599934] radio_continue_shutdown
+[600293] De-assert (low) EIC_REMAIN_ON
+
+Test 04
+
+[067136] daemon_power_remove
+[067197] daemon_shutdown_sequence 2. timeout time 067198
+[070511] turn off wifi using rfkill
+[071926] notify flash-sync-services: 0
+[072178] kill sync-iprf: -1
+[072229] syncfs
+[072650] stop watchdogd
+[117271] turn off wifi exited: 0
+[138116] syncfs done
+[142546] sync exited: 0
+[142911] shutdown eMMC
+[159998] radio_continue_shutdown
+[160457] De-assert (low) EIC_REMAIN_ON
+
+Test 05
+
+[306153] daemon_power_remove
+[306217] daemon_shutdown_sequence 2. timeout time 306218
+[309478] turn off wifi using rfkill
+[310817] notify flash-sync-services: 0
+[311057] kill sync-iprf: -1
+[311111] syncfs
+[311486] stop watchdogd
+[348625] syncfs done
+[353246] sync exited: 0
+[359162] turn off wifi exited: 0
+[359493] shutdown eMMC
+[371372] radio_continue_shutdown
+[371777] De-assert (low) EIC_REMAIN_ON
+
+Test 06
+
+[149682] daemon_power_remove
+[149744] daemon_shutdown_sequence 2. timeout time 149745
+[152634] turn off wifi using rfkill
+[154101] notify flash-sync-services: 0
+[154295] kill sync-iprf: -1
+[154346] syncfs
+[154754] stop watchdogd
+[190175] syncfs done
+[194772] sync exited: 0
+[201809] turn off wifi exited: 0
+[202158] shutdown eMMC
+[221080] radio_continue_shutdown
+[221422] De-assert (low) EIC_REMAIN_ON
+
+Test 07
+
+[739247] daemon_power_remove
+[739310] daemon_shutdown_sequence 2. timeout time 739311
+[742170] turn off wifi using rfkill
+[743545] notify flash-sync-services: 0
+[743726] kill sync-iprf: -1
+[743776] syncfs
+[744172] stop watchdogd
+[797836] turn off wifi exited: 0
+[843827] syncfs done
+[848410] sync exited: 0
+[848692] shutdown eMMC
+[859106] radio_continue_shutdown
+[859494] De-assert (low) EIC_REMAIN_ON
+
+Test 08
+
+[511978] daemon_power_remove
+[512083] daemon_shutdown_sequence 2. timeout time 512084
+[514779] turn off wifi using rfkill
+[516162] notify flash-sync-services: 0
+[516353] kill sync-iprf: -1
+[516400] syncfs
+[516764] stop watchdogd
+[565246] turn off wifi exited: 0
+[580116] syncfs done
+[584555] sync exited: 0
+[584890] shutdown eMMC
+[604054] radio_continue_shutdown
+[604455] De-assert (low) EIC_REMAIN_ON
+
+Test 09
+
+[217521] daemon_power_remove
+[217582] daemon_shutdown_sequence 2. timeout time 217583
+[220245] turn off wifi using rfkill
+[221601] notify flash-sync-services: 0
+[221776] kill sync-iprf: -1
+[221822] syncfs
+[222236] stop watchdogd
+[266276] syncfs done
+[267922] turn off wifi exited: 0
+[270808] sync exited: 0
+[271129] shutdown eMMC
+[292639] radio_continue_shutdown
+[292998] De-assert (low) EIC_REMAIN_ON
+
+Test 10
+
+[146621] daemon_power_remove
+[146682] daemon_shutdown_sequence 2. timeout time 146683
+[149488] turn off wifi using rfkill
+[150883] notify flash-sync-services: 0
+[151108] syncfs
+[151496] stop watchdogd
+[200191] turn off wifi exited: 0
+[206533] syncfs done
+[210979] sync exited: 0
+[211380] shutdown eMMC
+[233909] radio_continue_shutdown
+[234336] De-assert (low) EIC_REMAIN_ON
+
+Test 11
+
+[524848] daemon_power_remove
+[524907] daemon_shutdown_sequence 2. timeout time 524909
+[527636] turn off wifi using rfkill
+[528994] notify flash-sync-services: 0
+[529210] kill sync-iprf: -1
+[529258] syncfs
+[529604] stop watchdogd
+[583150] syncfs done
+[585372] sync exited: 0
+[617171] turn off wifi exited: 0
+[617545] shutdown eMMC
+[629357] radio_continue_shutdown
+[629684] De-assert (low) EIC_REMAIN_ON
+
+Test 12
+
+[706600] daemon_power_remove
+[706658] daemon_shutdown_sequence 2. timeout time 706660
+[709346] turn off wifi using rfkill
+[710675] notify flash-sync-services: 0
+[710878] syncfs
+[711308] stop watchdogd
+[757834] turn off wifi exited: 0
+[803628] syncfs done
+[808151] sync exited: 0
+[808487] shutdown eMMC
+[818090] radio_continue_shutdown
+[818534] De-assert (low) EIC_REMAIN_ON
+
+Test 13
+
+[073076] daemon_power_remove
+[073139] daemon_shutdown_sequence 2. timeout time 073140
+[075682] turn off wifi using rfkill
+[076960] notify flash-sync-services: 0
+[077193] kill sync-iprf: -1
+[077242] syncfs
+[077620] stop watchdogd
+[126747] syncfs done
+[131328] sync exited: 0
+[145598] turn off wifi exited: 0
+[145965] shutdown eMMC
+[157541] radio_continue_shutdown
+[157944] De-assert (low) EIC_REMAIN_ON
+
+Test 14
+
+[254971] daemon_power_remove
+[255059] daemon_shutdown_sequence 2. timeout time 255060
+[257725] turn off wifi using rfkill
+[259074] notify flash-sync-services: 0
+[259285] kill sync-iprf: 0
+[259332] syncfs
+[259709] stop watchdogd
+[316438] syncfs done
+[321141] sync exited: 0
+[329757] turn off wifi exited: 0
+[330103] shutdown eMMC
+[339921] radio_continue_shutdown
+[340302] De-assert (low) EIC_REMAIN_ON
+
+Test 15
+
+[542802] daemon_power_remove
+[542861] daemon_shutdown_sequence 2. timeout time 542862
+[545520] turn off wifi using rfkill
+[546855] notify flash-sync-services: 0
+[547083] kill sync-iprf: 0
+[547134] syncfs
+[547477] stop watchdogd
+[594997] turn off wifi exited: 0
+[661856] syncfs done
+[666362] sync exited: 0
+[666658] shutdown eMMC
+[676508] radio_continue_shutdown
+[676869] De-assert (low) EIC_REMAIN_ON
 
