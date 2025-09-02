@@ -5,78 +5,94 @@ library(RColorBrewer)
 library(reshape2)
 library(gridExtra)
 
+#------------------------------------------------------------------------------
+
 printf <- function(...) invisible(print(sprintf(...)))
 
-palette <- brewer.pal(4, 'Set2')
-subtype <- c('Filesystem', 'WiFi', 'eMMC', 'Total')
-names(palette) <- subtype
+extractSetup <- function(setup, useBatt=FALSE, battOnly=FALSE) {
+    x <- d %>% filter(Setup == setup)
+
+    # Some data does not have valid battery time data
+    #
+    if (! useBatt || setup %in%
+        c('baseline', '256 KB cache', 'exec(rmmod cc33xx)', 'rfkill')) {
+        x$Batt <- NULL
+    }
+    return(x)
+}
+
+createStatForSetup <- function(setup) {
+    analysis <- colnames(setup)[3:length(colnames(setup))]
+    peak <- rep(0, length(analysis))
+    median <- rep(0, length(analysis))
+    for (i in 1:length(analysis)) {
+        if (analysis[i] == 'Batt') {
+            peak[i] <- min(setup[[analysis[i]]])
+        } else {
+            peak[i] <- max(setup[[analysis[i]]])
+        }
+    }
+    for (i in 1:length(analysis)) {
+        median[i] <- median(setup[[analysis[i]]])
+    }
+    d <- data.frame(
+               Stat=rep(c('Peak', 'Meadian'), each=length(analysis)),
+               Analysis=rep(analysis, 2),
+               Time=c(peak, median)
+    )
+    d$Analysis <- factor(d$Analysis, levels = c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt'))
+    return(d)
+}
+
+plotScatter <- function(setup, title) {
+    palette <- brewer.pal(length(analy_levels), 'Set2')
+    names(palette) <- analy_levels
+
+    l <- melt(setup, id.vars = c('Setup', 'Idx'),
+                variable.name = 'Name',
+                value.name = 'Time')
+
+    s <- ggplot(l, aes(x=Idx, y=Time, color=Name)) +
+        scale_color_manual(values=palette) +
+        ylim(0, time_max) +
+        geom_line() +
+        geom_point() +
+        xlab('Tests') +
+        ylab('Milliseconds') +
+        theme_bw() + 
+        theme(legend.title=element_blank()) +
+        ggtitle(title)
+
+    b <- ggplot(createStatForSetup(setup),
+                aes(x=Analysis, y=Time, fill=Stat)) +
+        geom_bar(stat='identity', position=position_dodge()) +
+        ylim(0, time_max) +
+        ylab('Milliseconds') +
+        scale_fill_brewer(palette='Paired') +
+        theme(axis.title.x = element_blank(), axis.text = element_blank()) +
+        geom_text(aes(label=sprintf('%.1f', Time)), vjust=1.6, color='black',
+                      position=position_dodge(.9), size=3) +
+        theme(legend.title=element_blank()) +
+        theme_bw()
+
+    return(grid.arrange(s, b, nrow=2))
+}
+
+#------------------------------------------------------------------------------
 
 name = 'Shutdown improvements'
-d <- read.csv(paste('rpt/', name, '.csv', sep=''))
-total_max = max(d$Total)
+analy_levels <- c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt')
 
-setup_names <- c('baseline', '256 KB cache', 'exec(rmmod cc33xx)',
-    'rfkill')
-setup1 <- d %>% filter(Setup == setup_names[1]);
-setup2 <- d %>% filter(Setup == setup_names[2]);
-setup3 <- d %>% filter(Setup == setup_names[3]);
-setup4 <- d %>% filter(Setup == setup_names[4]);
+d <- read.csv(paste(name, '.csv', sep=''))
+time_max = max(d$Batt)
 
-setup1_l <- melt(setup1, id.vars = c('Setup', 'Idx'),
-            variable.name = 'Name',
-            value.name = 'Time')
-setup2_l <- melt(setup2, id.vars = c('Setup', 'Idx'),
-            variable.name = 'Name',
-            value.name = 'Time')
-setup3_l <- melt(setup3, id.vars = c('Setup', 'Idx'),
-            variable.name = 'Name',
-            value.name = 'Time')
-setup4_l <- melt(setup4, id.vars = c('Setup', 'Idx'),
-            variable.name = 'Name',
-            value.name = 'Time')
+setup_name <- c('baseline', '256 KB cache', 'exec(rmmod cc33xx)',
+    'rfkill', 'batt-est-killall', 'non-pco')
 
-svg(paste(name, '.svg', sep=''), width=14, height=7)
-p1 = ggplot(setup1_l, aes(x=Idx, y=Time, color=Name)) +
-    scale_color_manual(values=palette) +
-    ylim(0, total_max) +
-    geom_line() +
-    geom_point() +
-    xlab('Tests') +
-    ylab('Time (ms)') +
-    theme_bw() + 
-    theme(legend.title=element_blank()) +
-    ggtitle(paste('(1) ', setup_names[1], sep=''))
-p2 = ggplot(setup2_l, aes(x=Idx, y=Time, color=Name)) +
-    scale_color_manual(values=palette) +
-    ylim(0, total_max) +
-    geom_line() +
-    geom_point() +
-    xlab('Tests') +
-    ylab('Time (ms)') +
-    theme_bw() +
-    theme(legend.title=element_blank()) +
-    ggtitle(paste('(2) ', setup_names[2], sep=''))
-p3 = ggplot(setup3_l, aes(x=Idx, y=Time, color=Name)) +
-    scale_color_manual(values=palette) +
-    ylim(0, total_max) +
-    geom_line() +
-    geom_point() +
-    xlab('Tests') +
-    ylab('Time (ms)') +
-    theme_bw() +
-    theme(legend.title=element_blank()) +
-    ggtitle(paste('(3a) ', setup_names[3], sep=''))
-p4 = ggplot(setup4_l, aes(x=Idx, y=Time, color=Name)) +
-    scale_color_manual(values=palette) +
-    ylim(0, total_max) +
-    geom_line() +
-    geom_point() +
-    xlab('Tests') +
-    ylab('Time (ms)') +
-    theme_bw() +
-    theme(legend.title=element_blank()) +
-    ggtitle(paste('(3b) ', setup_names[4], sep=''))
+#------------------------------------------------------------------------------
 
-grid.arrange(p1, p2, p3, p4, top=name, nrow=1)
+svg(paste(name, '.svg', sep=''), width=7, height=7)
+plotScatter(extractSetup('non-pco'), 'non-pco')
+#grid.arrange(p1, p2, p3, p4, p6, top=name, nrow=1)
 dev.off()
 save.image(file=paste(name, '.RData', sep=''))

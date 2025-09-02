@@ -12,7 +12,7 @@ subtype <- c('Filesystem', 'WiFi', 'eMMC', 'Total')
 names(palette) <- subtype
 
 name = 'Compare test methods: dd vs flash-sync'
-d <- read.csv(paste('rpt/', name, '.csv', sep=''))
+d <- read.csv(paste(name, '.csv', sep=''))
 total_max = max(d$Total)
 
 setup_names <- c('rmmod,no-cache/flash_sync', 'rmmod,no-cache/dd')

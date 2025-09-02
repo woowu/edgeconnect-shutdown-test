@@ -18,6 +18,21 @@ const argv = yargs(process.argv.slice(2))
     .version('0.0.1')
     .argv;
 
+function testBase(idx) 
+{
+    return {
+        idx: idx, 
+        powerDownStart: null,
+        emmcStart: 0,
+        filesystem: 0,
+        wifi: null,
+        emmc: null,
+        batt: null,
+        clock: 0,
+        clockHigh: 0,
+    };
+};
+
 function getSetupName(state)
 {
     const comp = [state.setupL1];
@@ -42,6 +57,9 @@ function processLogLineInSingleTest(state, line, lineNumber)
     state.test.clock = time;
 
     const msg = m[2].trim();
+
+    if (state.test.powerDownStart != null)
+        state.test.batt = state.test.clock - state.test.powerDownStart;
 
     if (msg.includes('daemon_power_remove')) {
         state.test.powerDownStart = state.test.clock;
@@ -68,12 +86,17 @@ function processLogLineInSingleTest(state, line, lineNumber)
     if (m) {
         state.test.total = state.test.clock - state.test.powerDownStart;
         state.test.emmc = state.test.clock - state.test.emmcStart;
-        const testIdx = state.test.idx;
-        delete state.test.idx;
-        state.tests[getSetupName(state)][testIdx]
-            = state.test;
         return;
     }
+}
+
+function pushTest(state)
+{
+    const testIdx = state.test.idx;
+    delete state.test.idx;
+    state.tests[getSetupName(state)][testIdx]
+        = state.test;
+    state.test = null;
 }
 
 function processLogFile(filename)
@@ -107,6 +130,7 @@ function processLogFile(filename)
             re = /^## (.*)/;
             m = line.match(re);
             if (m) {
+                if (state.test) pushTest(state);
                 state.setupL1 = m[1];
                 /* I dont know there will be a lower level of setup name, so I
                  * have to setup my object first. If the lower level appeared
@@ -128,22 +152,15 @@ function processLogFile(filename)
             re = /^Test ([0-9]+)/;
             m = line.match(re);
             if (m) {
-                state.test = {
-                    idx: m[1],
-                    powerDownStart: 0,
-                    emmcStart: 0,
-                    filesystem: Infinity,
-                    wifi: Infinity,
-                    emmc: Infinity,
-                    clock: 0,
-                    clockHigh: 0,
-                };
+                if (state.test) pushTest(state);
+                state.test = testBase(m[1]);
                 return;
             }
             processLogLineInSingleTest(state, line, lineNumber);
         });
 
         rl.on('close', () => {
+            if (state.test) pushTest(state);
             resolve(state);
         });
     });
@@ -158,17 +175,22 @@ function dumpState(state)
         () => {});
 }
 
+function numToStr(n)
+{
+    return n != null ? n.toFixed(3) : 'N/A';
+}
+
 const filename = argv._[0];
 const state = await processLogFile(filename);
 dumpState(state);
 const csv = fs.createWriteStream(state.name + '.csv');
-csv.write('Setup,Idx,Filesystem,WiFi,eMMC,Total\n');
+csv.write('Setup,Idx,Filesystem,WiFi,eMMC,Total,Batt\n');
 for (const setup in state.tests) {
     const tests = state.tests[setup];
     for (const idx in tests) {
-        const { filesystem, wifi, emmc, total } = tests[idx];
-        csv.write(`"${setup}",${idx},${filesystem.toFixed(3)},${wifi.toFixed(3)},`
-            + `${emmc.toFixed(3)},${total.toFixed(3)}\n`);
+        const { filesystem, wifi, emmc, total, batt } = tests[idx];
+        csv.write(`${setup},${idx},${numToStr(filesystem)},${numToStr(wifi)},`
+            + `${numToStr(emmc)},${numToStr(total)},${numToStr(batt)}\n`);
     }
 }
 csv.end();
