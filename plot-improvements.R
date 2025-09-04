@@ -9,7 +9,7 @@ library(gridExtra)
 
 printf <- function(...) invisible(print(sprintf(...)))
 
-extractSetup <- function(setup, useBatt=FALSE, battOnly=FALSE) {
+extractSetup <- function(setup, useBatt=TRUE, battOnly=FALSE) {
     x <- d %>% filter(Setup == setup)
 
     # Some data does not have valid battery time data
@@ -51,6 +51,7 @@ plotScatter <- function(setup, title) {
     l <- melt(setup, id.vars = c('Setup', 'Idx'),
                 variable.name = 'Name',
                 value.name = 'Time')
+    l <- l %>% filter(Time > 0)
 
     s <- ggplot(l, aes(x=Idx, y=Time, color=Name)) +
         scale_color_manual(values=palette) +
@@ -68,11 +69,10 @@ plotScatter <- function(setup, title) {
         geom_bar(stat='identity', position=position_dodge()) +
         ylim(0, time_max) +
         ylab('Milliseconds') +
-        scale_fill_brewer(palette='Paired') +
-        theme(axis.title.x = element_blank(), axis.text = element_blank()) +
-        geom_text(aes(label=sprintf('%.1f', Time)), vjust=1.6, color='black',
+        scale_fill_brewer(palette='Paired', name=NULL) +
+        #scale_fill_manual(values=c('gray78', 'gray68')) +
+        geom_text(aes(label=sprintf('%.0f', Time)), vjust=1.6, color='black',
                       position=position_dodge(.9), size=3) +
-        theme(legend.title=element_blank()) +
         theme_bw()
 
     return(grid.arrange(s, b, nrow=2))
@@ -84,15 +84,25 @@ name = 'Shutdown improvements'
 analy_levels <- c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt')
 
 d <- read.csv(paste(name, '.csv', sep=''))
-time_max = max(d$Batt)
+time_max = max(1000)
 
-setup_name <- c('baseline', '256 KB cache', 'exec(rmmod cc33xx)',
-    'rfkill', 'batt-est-killall', 'non-pco')
+setup_name <- c(
+                'Baseline',
+                'Cache 256 KB',
+                'WiFi: exec(rmmod cc33xx',
+                'WiFi: rfkill',
+                'Killall',
+                'NonPCO no power down',
+                'NonPCO',
+                'PCO'
+)
 
 #------------------------------------------------------------------------------
 
-svg(paste(name, '.svg', sep=''), width=7, height=7)
-plotScatter(extractSetup('non-pco'), 'non-pco')
-#grid.arrange(p1, p2, p3, p4, p6, top=name, nrow=1)
+svg(paste(name, '.svg', sep=''), width=20, height=14)
+p1 <- plotScatter(extractSetup('Baseline'), 'Baseline')
+p2 <- plotScatter(extractSetup('NonPCO'), 'NonPCO')
+p3 <- plotScatter(extractSetup('PCO'), 'PCO')
+grid.arrange(p1, p2, p3, top=name, nrow=1)
 dev.off()
 save.image(file=paste(name, '.RData', sep=''))

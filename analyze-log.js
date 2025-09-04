@@ -25,9 +25,10 @@ function testBase(idx)
         powerDownStart: null,
         emmcStart: 0,
         filesystem: 0,
-        wifi: null,
-        emmc: null,
-        batt: null,
+        wifi: 0,
+        emmc: 0,
+        total: 0,
+        batt: 0,
         clock: 0,
         clockHigh: 0,
     };

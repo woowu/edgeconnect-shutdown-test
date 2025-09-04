@@ -1,6 +1,10 @@
 # Shutdown improvements
 
-## baseline
+## Baseline
+
+- Firmware is not optimized
+- Default cache is 10%/15%
+- Ping size = 600
 
 Test command:
 ```
@@ -238,11 +242,14 @@ Test 15
 [276157] radio_continue_shutdown
 [276555] De-assert (low) EIC_REMAIN_ON
 
-## 256 KB cache
+## Cache 256 KB
+
+- Firmware is optimized
+- Ping size = 600
 
 Test command:
 ```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache 256 
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache-lo 256 --cache-hi 256 
 ```
 
 Test 01
@@ -484,11 +491,14 @@ Test 15
 [123919] radio_continue_shutdown
 [124347] De-assert (low) EIC_REMAIN_ON
 
-## exec(rmmod cc33xx)
+## WiFi: exec(rmmod cc33xx)
+
+- Firmware is optimized
+- Ping size = 600
 
 Test command:
 ```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache 256 
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache-lo 256 --cache-hi 256
 ```
 
 Test 01
@@ -712,7 +722,10 @@ Test 15
 [828183] radio_continue_shutdown
 [828502] De-assert (low) EIC_REMAIN_ON
 
-## rfkill
+## WiFi: rfkill
+
+- Firmware is optimized
+- Ping size = 600
 
 Test command:
 ```
@@ -1067,7 +1080,10 @@ Test 22
 [182510] radio_continue_shutdown
 [182887] De-assert (low) EIC_REMAIN_ON
 
-## batt-est-killall
+## Killall
+
+- Firmware is optimized
+- Ping size = 600
 
 Device had
 Test command:
@@ -1611,12 +1627,14 @@ killall processes
 [022115] waiting battery drain
 [032512] waiting battery drain
 
-## non-pco
+## NonPCO no power down
 
-Device had
+- Ping size = 600.
+- Default cache is 170/256
+
 Test command:
 ```
-mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd --cache-hi 256 --cache-lo 170
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd
 ```
 
 Test 1
@@ -2079,3 +2097,778 @@ Test 23
 [534570] waiting battery drain
 [545040] waiting battery drain
 
+## NonPCO
+
+- Firmware is optimized
+- Ping size = 1472
+- Default cache is 170/256
+
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd
+```
+
+Test 1
+
+[022919] daemon_power_remove
+[022979] daemon_shutdown_sequence 2. timeout time 022963
+[026446] turn off wifi using rfkill
+[028076] notify flash-sync-services: 0
+[028302] kill sync-iprf: -1
+[028430] syncfs
+[081687] rfkill done
+[085729] turn off wifi exited: 0
+[104540] syncfs done
+[108584] sync exited: 0
+[108905] shutdown eMMC
+[119095] radio_continue_shutdown
+[119486] De-assert (low) EIC_REMAIN_ON
+[119532] waiting battery drain
+[129681] waiting battery drain
+
+Test 2
+
+[840159] daemon_power_remove
+[840220] daemon_shutdown_sequence 2. timeout time 840203
+[843364] turn off wifi using rfkill
+[845085] notify flash-sync-services: 0
+[845317] syncfs
+[905978] rfkill done
+[910059] turn off wifi exited: 0
+[917663] syncfs done
+[921563] sync exited: 0
+[921916] shutdown eMMC
+[932110] radio_continue_shutdown
+[932502] De-assert (low) EIC_REMAIN_ON
+[932547] waiting battery drain
+[942697] waiting battery drain
+[953195] waiting battery drain
+[963632] waiting battery drain
+
+Test 3
+
+[422259] daemon_power_remove
+[422321] daemon_shutdown_sequence 2. timeout time 422304
+[425561] turn off wifi using rfkill
+[427147] notify flash-sync-services: 0
+[427367] kill sync-iprf: -1
+[427416] syncfs
+[485959] rfkill done
+[490199] turn off wifi exited: 0
+[494985] syncfs done
+[496866] sync exited: 0
+[497139] shutdown eMMC
+[507499] radio_continue_shutdown
+[507851] De-assert (low) EIC_REMAIN_ON
+[507897] waiting battery drain
+[518085] waiting battery drain
+[528475] waiting battery drain
+[538966] waiting ba
+
+Test 4
+
+[417619] daemon_power_remove
+[417678] daemon_shutdown_sequence 2. timeout time 417663
+[421056] turn off wifi using rfkill
+[422651] notify flash-sync-services: 0
+[422849] kill sync-iprf: -1
+[422921] syncfs
+[488094] rfkill done
+[492246] turn off wifi exited: 0
+[496680] syncfs done
+[500596] sync exited: 0
+[500913] shutdown eMMC
+[511654] radio_continue_shutdown
+[511976] De-assert (low) EIC_REMAIN_ON
+[512058] waiting battery drain
+[522201] waiting battery drain
+[532635] waiting battery drain
+[543100] waiting battery drain
+[553539] waiting
+
+Test 5
+
+[365196] daemon_power_remove
+[365258] daemon_shutdown_sequence 2. timeout time 365241
+[368658] turn off wifi using rfkill
+[370276] notify flash-sync-services: 0
+[370586] kill sync-iprf: -1
+[370640] syncfs
+[430792] syncfs done
+[434770] sync exited: 0
+[452501] rfkill done
+[456537] turn off wifi exited: 0
+[456836] shutdown eMMC
+[468664] radio_continue_shutdown
+[469091] De-assert (low) EIC_REMAIN_ON
+[469139] waiting battery drain
+[479281] waiting battery drain
+[489644] waiting battery drain
+[500132] waiting battery drain
+
+Test 6
+
+[697739] daemon_power_remove
+[697805] daemon_shutdown_sequence 2. timeout time 697787
+[701334] turn off wifi using rfkill
+[703229] notify flash-sync-services: 0
+[703452] kill sync-iprf: -1
+[703536] syncfs
+[768546] rfkill done
+[771830] syncfs done
+[773853] turn off wifi exited: 0
+[776364] sync exited: 0
+[776617] shutdown eMMC
+[787183] radio_continue_shutdown
+[787555] De-assert (low) EIC_REMAIN_ON
+[787607] waiting battery drain
+[797806] waiting battery drain
+[808300] waiting battery drain
+[818777] waiting battery drain
+
+Test 7
+
+[804548] daemon_power_remove
+[804609] daemon_shutdown_sequence 2. timeout time 804591
+[807815] turn off wifi using rfkill
+[809523] notify flash-sync-services: 0
+[809780] kill sync-iprf: 0
+[809831] syncfs
+[874516] rfkill done
+[878421] syncfs done
+[880193] turn off wifi exited: 0
+[882608] sync exited: 0
+[882757] shutdown eMMC
+[893130] radio_continue_shutdown
+[893534] De-assert (low) EIC_REMAIN_ON
+[893586] waiting battery drain
+[903749] waiting battery drain
+
+Test 8
+
+[323196] daemon_power_remove
+[323257] daemon_shutdown_sequence 2. timeout time 323241
+[326570] turn off wifi using rfkill
+[328190] notify flash-sync-services: 0
+[328492] kill sync-iprf: -1
+[328562] syncfs
+[391195] syncfs done
+[395181] sync exited: 0
+[412920] rfkill done
+[416891] turn off wifi exited: 0
+[417217] shutdown eMMC
+[429104] radio_continue_shutdown
+[429485] De-assert (low) EIC_REMAIN_ON
+[429531] waiting battery drain
+[439673] waiting battery drain
+[450129] waiting battery drain
+
+Test 9
+
+[524392] daemon_power_remove
+[524453] daemon_shutdown_sequence 2. timeout time 524436
+[527688] turn off wifi using rfkill
+[529444] notify flash-sync-services: 0
+[529667] kill sync-iprf: -1
+[529717] syncfs
+[588668] syncfs done
+[592731] sync exited: 0
+[610897] rfkill done
+[614888] turn off wifi exited: 0
+[615249] shutdown eMMC
+[627077] radio_continue_shutdown
+[627467] De-assert (low) EIC_REMAIN_ON
+[627517] waiting battery drain
+[637662] waiting battery drain
+[648051] waiting battery drain
+[658454] waiting battery drain
+
+Test 10
+
+[638082] daemon_power_remove
+[638145] daemon_shutdown_sequence 2. timeout time 638129
+[641366] turn off wifi using rfkill
+[643084] notify flash-sync-services: 0
+[643310] kill sync-iprf: -1
+[643360] syncfs
+[696345] rfkill done
+[700421] turn off wifi exited: 0
+[712995] syncfs done
+[717037] sync exited: 0
+[717327] shutdown eMMC
+[727094] radio_continue_shutdown
+[727466] De-assert (low) EIC_REMAIN_ON
+[727510] waiting battery drain
+[737665] waiting battery drain
+[748152] waiting battery drain
+
+Test 11
+
+[070910] daemon_power_remove
+[070972] daemon_shutdown_sequence 2. timeout time 070956
+[074423] turn off wifi using rfkill
+[075923] notify flash-sync-services: 0
+[076164] kill sync-iprf: -1
+[076215] syncfs
+[138964] rfkill done
+[143185] turn off wifi exited: 0
+[152638] syncfs done
+[156587] sync exited: 0
+[156906] shutdown eMMC
+[166864] radio_continue_shutdown
+[167295] De-assert (low) EIC_REMAIN_ON
+[167341] waiting battery drain
+[177479] waiting battery drain
+[187897] waiting battery drain
+[198338] waiting battery drain
+
+Test 12
+
+[838568] daemon_power_remove
+[838626] daemon_shutdown_sequence 2. timeout time 838610
+[841784] turn off wifi using rfkill
+[843498] notify flash-sync-services: 0
+[843722] kill sync-iprf: -1
+[843774] syncfs
+[914975] syncfs done
+[918955] sync exited: 0
+[933948] rfkill done
+[938239] turn off wifi exited: 0
+[938561] shutdown eMMC
+[950491] radio_co
+
+Test 13
+
+[804384] daemon_power_remove
+[804445] daemon_shutdown_sequence 2. timeout time 804428
+[807737] turn off wifi using rfkill
+[809463] notify flash-sync-services: 0
+[809708] kill sync-iprf: -1
+[809761] syncfs
+[872554] syncfs done
+[876603] sync exited: 0
+[894492] rfkill done
+[898485] turn off wifi exited: 0
+[898787] shutdown eMMC
+[910723] radio_continue_shutdown
+[911145] De-assert (low) EIC_REMAIN_ON
+[911201] waiting battery drain
+
+Test 14
+
+[312163] daemon_power_remove
+[312226] daemon_shutdown_sequence 2. timeout time 312208
+[315330] turn off wifi using rfkill
+[317048] notify flash-sync-services: 0
+[317276] kill sync-iprf: -1
+[317327] syncfs
+[377562] syncfs done
+[381490] sync exited: 0
+[399700] rfkill done
+[403691] turn off wifi exited: 0
+[404077] shutdown eMMC
+[415991] radio_continue_shutdown
+[416395] De-assert (low) EIC_REMAIN_ON
+[416439] waiting battery drain
+
+
+Test 15
+
+[192392] daemon_power_remove
+[192479] daemon_shutdown_sequence 2. timeout time 192450
+[195770] turn off wifi using rfkill
+[197443] notify flash-sync-services: 0
+[197804] kill sync-iprf: 0
+[197861] syncfs
+[268547] rfkill done
+[272754] turn off wifi exited: 0
+[283723] syncfs done
+[287822] sync exited: 0
+[288214] shutdown eMMC
+[298574] radio_continue_shutdown
+[298922] De-assert (low) EIC_REMAIN_ON
+[298968] waiting battery drain
+[309144] waiting batt
+
+Test 16
+
+[307997] daemon_power_remove
+[308119] daemon_shutdown_sequence 2. timeout time 308102
+[311227] turn off wifi using rfkill
+[312919] notify flash-sync-services: 0
+[313194] kill sync-iprf: 0
+[313245] syncfs
+[357950] rfkill done
+[362179] turn off wifi exited: 0
+[404550] syncfs done
+[408443] sync exited: 0
+[408769] shutdown eMMC
+[418574] radio_continue_shutdown
+[418963] De-assert (low) EIC_REMAIN_ON
+[419062] waiting battery drain
+[429210] waiting battery drain
+
+Test 17
+
+[613102] daemon_power_remove
+[613165] daemon_shutdown_sequence 2. timeout time 613147
+[616372] turn off wifi using rfkill
+[617897] notify flash-sync-services: 0
+[618295] kill sync-iprf: 0
+[618349] syncfs
+[676577] syncfs done
+[680535] sync exited: 0
+[696381] rfkill done
+[700368] turn off wifi exited: 0
+[700722] shutdown eMMC
+[712634] radio_continue_shutdown
+[713077] De-assert (low) EIC_REMAIN_ON
+[713125] waiting battery drain
+[723295] waiting battery drain
+[733715] waiting battery drain
+
+Test 18
+
+[270494] daemon_power_remove
+[270584] daemon_shutdown_sequence 2. timeout time 270554
+[273888] turn off wifi using rfkill
+[275447] notify flash-sync-services: 0
+[275810] kill sync-iprf: 0
+[275864] syncfs
+[353400] syncfs done
+[357345] sync exited: 0
+
+Test 19
+
+[303295] daemon_power_remove
+[303392] daemon_shutdown_sequence 2. timeout time 303375
+[306713] turn off wifi using rfkill
+[317562] notify flash-sync-services: 0
+[317782] kill sync-iprf: -1
+[317832] syncfs
+[380682] rfkill done
+[382886] syncfs done
+[386523] sync exited: 0
+[386942] turn off wifi exited: 0
+[386993] shutdown eMMC
+[397507] radio_continue_shutdown
+[397876] De-assert (low) EIC_REMAIN_ON
+[397921] waiting battery drain
+[408123] waiting battery drain
+[418574] waiting battery drain
+
+Test 20
+
+[871758] daemon_power_remove
+[871822] daemon_shutdown_sequence 2. timeout time 871803
+[875208] turn off wifi using rfkill
+[876911] notify flash-sync-services: 0
+[877142] kill sync-iprf: -1
+[877193] syncfs
+[949188] rfkill done
+[952501] syncfs done
+[954299] turn off wifi exited: 0
+[956740] sync exited: 0
+[956973] shutdown eMMC
+[966812] radio_continue_shutdown
+[967184] De-assert (low) EIC_REMAIN_ON
+[967229] waiting battery drain
+[977371] waiting battery drain
+
+Test 21
+
+[329981] daemon_power_remove
+[330233] daemon_shutdown_sequence 2. timeout time 330185
+[333506] turn off wifi using rfkill
+[335221] notify flash-sync-services: 0
+[335462] kill sync-iprf: -1
+[335513] syncfs
+[403116] rfkill done
+[407284] turn off wifi exited: 0
+[426075] syncfs done
+[430107] sync exited: 0
+[430450] shutdown eMMC
+
+Test 22
+
+[730523] daemon_power_remove
+[730584] daemon_shutdown_sequence 2. timeout time 730566
+[734073] turn off wifi using rfkill
+[735627] notify flash-sync-services: 0
+[735941] kill sync-iprf: -1
+[735992] syncfs
+[794216] rfkill done
+[798407] turn off wifi exited: 0
+[802299] syncfs done
+[806271] sync exited: 0
+[806599] shutdown eMMC
+[816372] radio_continue_shutdown
+[816740] De-assert (low) EIC_REMAIN_ON
+[816787] waiting battery drain
+[826963] waiting battery drain
+[837403] waiting battery drain
+[847802] waiting battery drain
+[858264] waiting battery drain
+
+Test 23
+
+[986604] daemon_power_remove
+[986663] daemon_shutdown_sequence 2. timeout time 986648
+[989887] turn off wifi using rfkill
+[991639] notify flash-sync-services: 0
+[991839] kill sync-iprf: -1
+[991889] syncfs
+[049940] syncfs done
+[052954] rfkill done
+[054752] sync exited: 0
+[057287] turn off wifi exited: 0
+[057597] shutdown eMMC
+[067572] radio_continue_shutdown
+[067961] De-assert (low) EIC_REMAIN_ON
+[068024] waiting battery drain
+[078198] waiting battery drain
+[088648] waiting battery drain
+[099116] waiting battery drain
+[109582] waiting battery drain
+
+Test 24
+
+[292182] daemon_power_remove
+[292325] daemon_shutdown_sequence 2. timeout time 292243
+[295413] turn off wifi using rfkill
+[296896] notify flash-sync-services: 0
+[297154] kill sync-iprf: -1
+[297279] syncfs
+[360111] syncfs done
+[364181] sync exited: 0
+[371187] rfkill done
+[375168] turn off wifi exited: 0
+[375462] shutdown eMMC
+[384770] radio_continue_shutdown
+[385208] De-assert (low) EIC_REMAIN_ON
+[385267] waiting battery drain
+[395430] waiting battery drain
+[405846] waiting battery drain
+[416289] waiting battery drain
+
+Test 25
+
+[694233] daemon_power_remove
+[694295] daemon_shutdown_sequence 2. timeout time 694277
+[697574] turn off wifi using rfkill
+[699361] notify flash-sync-services: 0
+[699664] kill sync-iprf: -1
+[699752] syncfs
+[765396] syncfs done
+[768824] rfkill done
+[770687] sync exited: 0
+[773210] turn off wifi exited: 0
+[773480] shutdown eMMC
+[783396] radio_continue_shutdown
+[783765] De-assert (low) EIC_REMAIN_ON
+[783812] waiting battery drain
+[793970] waiting battery drain
+[804403] waiting battery drain
+[814849] waiting battery drain
+[825352] w
+
+## PCO
+
+- Firmware is optimized
+- Ping size = 1472
+- Default cache is 170/256
+
+Test command:
+```
+mkbusy --ssid woody-FX503VD --passwd abc12345 --gw 10.42.0.1 --cpu 2 --file-sz 10M --dd
+```
+
+Test 1
+
+[759219] daemon_power_remove
+[759282] daemon_shutdown_sequence 2. timeout time 759265
+[762536] turn off wifi using rfkill
+[764214] notify flash-sync-services: 0
+[764453] kill sync-iprf: -1
+[764503] syncfs
+[827311] syncfs done
+[831421] sync exited: 0
+[839795] rfkill done
+[843887] turn off wifi exited: 0
+[844213] shutdown eMMC
+[853516] radio_continue_shutdown
+[853891] De-assert (low) EIC_REMAIN_ON
+[853936] waiting battery drain
+[864120] waiting battery drain
+[874544] waiting battery drain
+[884940] waiting battery drain
+[895381] waiting battery drain
+
+Test 2
+
+[744564] daemon_power_remove
+[744624] daemon_shutdown_sequence 2. timeout time 744609
+[747872] turn off wifi using rfkill
+[749570] notify flash-sync-services: 0
+[749795] kill sync-iprf: -1
+[749847] syncfs
+[806668] syncfs done
+[810709] sync exited: 0
+[819666] rfkill done
+[823664] turn off wifi exited: 0
+[823950] shutdown eMMC
+[833862] radio_continue_shutdown
+[834313] De-assert (low) EIC_REMAIN_ON
+[834362] waiting battery drain
+[844495] waiting battery drain
+[854904] waiting battery drain
+[865327] waiting battery drain
+[875775] waiting battery drain
+[886289] waiting battery drain
+[896686] waiting battery drain
+[907120] waiting battery drain
+
+Test 3
+
+[807295] daemon_power_remove
+[807356] daemon_shutdown_sequence 2. timeout time 807339
+[810565] turn off wifi using rfkill
+[812271] notify flash-sync-services: 0
+[812495] kill sync-iprf: -1
+[812550] syncfs
+[869930] rfkill done
+[873998] turn off wifi exited: 0
+[879239] syncfs done
+[883129] sync exited: 0
+[883402] shutdown eMMC
+[893049] radio_continue_shutdown
+[893395] De-assert (low) EIC_REMAIN_ON
+[893439] waiting battery drain
+[903585] waiting battery drain
+[914080] waiting battery drain
+[924481] waiting battery drain
+[934870] waiting battery drain
+[945349] waiting battery drain
+[955766] waiting battery drain
+[966289] waitin�
+
+Test 4
+
+[425284] daemon_power_remove
+[425343] daemon_shutdown_sequence 2. timeout time 425328
+[428775] turn off wifi using rfkill
+[430380] notify flash-sync-services: 0
+[430629] kill sync-iprf: -1
+[430722] syncfs
+[493530] rfkill done
+[498275] turn off wifi exited: 0
+[504700] syncfs done
+[508859] sync exited: 0
+[509221] shutdown eMMC
+[518599] radio_continue_shutdown
+[518989] De-assert (low) EIC_REMAIN_ON
+[519070] waiting battery drain
+[529218] waiting battery drain
+[539622] waiting battery drain
+[550127] waiting battery drain
+[560580] waiting battery drain
+[571089] waiting battp
+
+Test 5
+
+[335504] daemon_power_remove
+[335564] daemon_shutdown_sequence 2. timeout time 335548
+[339049] turn off wifi using rfkill
+[340601] notify flash-sync-services: 0
+[340963] kill sync-iprf: -1
+[341052] syncfs
+[400758] syncfs done
+[404888] sync exited: 0
+[406258] rfkill done
+[410270] turn off wifi exited: 0
+[410612] shutdown eMMC
+[420513] radio_continue_shutdown
+[420853] De-assert (low) EIC_REMAIN_ON
+[420899] waiting battery drain
+[431096] waiting battery drain
+[441560] waiting battery drain
+[451988] waiting battery drain
+[462450] waiting battery drain
+[472892] waiting battery drain
+[48337�
+
+Test 6
+
+[526841] daemon_power_remove
+[526932] daemon_shutdown_sequence 2. timeout time 526900
+[530711] turn off wifi using rfkill
+[532436] notify flash-sync-services: 0
+[532668] kill sync-iprf: 0
+[532720] syncfs
+[555564] syncfs done
+[559742] sync exited: 0
+[599998] rfkill done
+[604292] turn off wifi exited: 0
+[604640] shutdown eMMC
+[616561] radio_continue_shutdown
+[616964] De-assert (low) EIC_REMAIN_ON
+[617050] waiting battery drain
+[627212] waiting battery drain
+[637605] waiting battery drain
+[648154] waiting battery drain
+[658640] waiting battery drain
+[669131] waiting battery drain
+[679597] waiting battery drain
+[690109] waiting battery �
+
+Test 7
+
+[454751] daemon_power_remove
+[454844] daemon_shutdown_sequence 2. timeout time 454826
+[458136] turn off wifi using rfkill
+[459683] notify flash-sync-services: 0
+[460155] syncfs
+[511215] syncfs done
+[515238] sync exited: 0
+[532848] rfkill done
+[536909] turn off wifi exited: 0
+[537366] shutdown eMMC
+[549132] radio_continue_shutdown
+[549463] De-assert (low) EIC_REMAIN_ON
+[549509] waiting battery drain
+[559648] waiting battery drain
+[570153] waiting battery drain
+[580577] waiting battery drain
+[591051] waiting battery drain
+
+Test 8
+
+[568621] daemon_power_remove
+[568683] daemon_shutdown_sequence 2. timeout time 568667
+[571862] turn off wifi using rfkill
+[573591] notify flash-sync-services: 0
+[573795] kill sync-iprf: -1
+[573848] syncfs
+[648270] rfkill done
+[652389] turn off wifi exited: 0
+[654921] syncfs done
+[658896] sync exited: 0
+[659267] shutdown eMMC
+[669062] radio_continue_shutdown
+[669441] De-assert (low) EIC_REMAIN_ON
+[669487] waiting battery drain
+[679630] waiting battery drain
+[690088] waiting battery drain
+[700560] waiting battery drain
+[710956] waiting battery drain
+
+Test 9
+
+[183321] daemon_power_remove
+[183382] daemon_shutdown_sequence 2. timeout time 183365
+[186550] turn off wifi using rfkill
+[188234] notify flash-sync-services: 0
+[188454] kill sync-iprf: -1
+[188505] syncfs
+[245331] syncfs done
+[249420] sync exited: 0
+[261432] rfkill done
+[265455] turn off wifi exited: 0
+[265746] shutdown eMMC
+[277684] radio_continue_shutdown
+[278059] De-assert (low) EIC_REMAIN_ON
+[278108] waiting battery drain
+[288254] waiting battery drain
+[298677] waiting battery drain
+[309149] waiting battery drain
+[319591] waiting battery drain
+
+Test 10
+
+[893893] daemon_power_remove
+[893956] daemon_shutdown_sequence 2. timeout time 893939
+[897185] turn off wifi using rfkill
+[898869] notify flash-sync-services: 0
+[899124] kill sync-iprf: -1
+[899176] syncfs
+[958437] syncfs done
+[962236] rfkill done
+[963991] sync exited: 0
+[966470] turn off wifi exited: 0
+[966729] shutdown eMMC
+[977131] radio_continue_shutdown
+[977444] De-assert (low) EIC_REMAIN_ON
+[977489] waiting battery drain
+[987630] waiting battery drain
+[998208] waiting battery drain
+[008628] waiting battery drain
+[019142] waiting battery drain
+[029583] waiting battery drain
+[040072] waiting battery drain
+[050459] waiting battery drain
+
+Test 11
+
+[266633] daemon_power_remove
+[266693] daemon_shutdown_sequence 2. timeout time 266676
+[269864] turn off wifi using rfkill
+[271628] notify flash-sync-services: 0
+[271884] kill sync-iprf: -1
+[271936] syncfs
+[328721] rfkill done
+[332770] turn off wifi exited: 0
+[333406] syncfs done
+[335270] sync exited: 0
+[335490] shutdown eMMC
+[344829] radio_continue_shutdown
+[345218] De-assert (low) EIC_REMAIN_ON
+[345263] waiting battery drain
+[355425] waiting battery drain
+[365867] waiting battery drain
+[376369] waiting battery drain
+[386779] waiting battery drain
+[397251] waiting battery drain
+[407646] waiting battery drain
+
+Test 12
+
+[171707] daemon_power_remove
+[171768] daemon_shutdown_sequence 2. timeout time 171751
+[174956] turn off wifi using rfkill
+[176782] notify flash-sync-services: 0
+[176986] kill sync-iprf: -1
+[177063] syncfs
+[248163] rfkill done
+[250215] syncfs done
+[253740] sync exited: 0
+[254182] turn off wifi exited: 0
+[254234] shutdown eMMC
+[264631] radio_continue_shutdown
+[264968] De-assert (low) EIC_REMAIN_ON
+[265047] waiting battery drain
+[275201] waiting battery drain
+[285599] waiting battery drain
+[296070] waiting battery drain
+[306459] waiting battery drain
+[316922] waiting battery drain
+[327393] waiting battery drain
+
+Test 13
+
+[165440] daemon_power_remove
+[165503] daemon_shutdown_sequence 2. timeout time 165484
+[168794] turn off wifi using rfkill
+[170553] notify flash-sync-services: 0
+[170745] kill sync-iprf: -1
+[170794] syncfs
+[233636] syncfs done
+[237748] sync exited: 0
+[259055] rfkill done
+[262987] turn off wifi exited: 0
+[263308] shutdown eMMC
+[275071] radio_continue_shutdown
+[275439] De-assert (low) EIC_REMAIN_ON
+[275487] waiting battery drain
+[285653] waiting battery drain
+[296168] waiting battery drain
+[306568] waiting battery d�
