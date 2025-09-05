@@ -7,6 +7,22 @@ library(gridExtra)
 
 #------------------------------------------------------------------------------
 
+name = 'Shutdown improvements'
+analy_levels <- c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt')
+
+setup_name <- c(
+                'Baseline',
+                'Cache 256 KB',
+                'WiFi: exec(rmmod cc33xx',
+                'WiFi: rfkill',
+                'Killall',
+                'NonPCO no power down',
+                'NonPCO',
+                'PCO'
+)
+
+#------------------------------------------------------------------------------
+
 printf <- function(...) invisible(print(sprintf(...)))
 
 extractSetup <- function(setup, useBatt=TRUE, battOnly=FALSE) {
@@ -14,8 +30,7 @@ extractSetup <- function(setup, useBatt=TRUE, battOnly=FALSE) {
 
     # Some data does not have valid battery time data
     #
-    if (! useBatt || setup %in%
-        c('baseline', '256 KB cache', 'exec(rmmod cc33xx)', 'rfkill')) {
+    if (! useBatt || setup %in% setup_name[1:4]) {
         x$Batt <- NULL
     }
     return(x)
@@ -24,7 +39,7 @@ extractSetup <- function(setup, useBatt=TRUE, battOnly=FALSE) {
 createStatForSetup <- function(setup) {
     analysis <- colnames(setup)[3:length(colnames(setup))]
     peak <- rep(0, length(analysis))
-    median <- rep(0, length(analysis))
+    mean <- rep(0, length(analysis))
     for (i in 1:length(analysis)) {
         if (analysis[i] == 'Batt') {
             peak[i] <- min(setup[[analysis[i]]])
@@ -33,12 +48,12 @@ createStatForSetup <- function(setup) {
         }
     }
     for (i in 1:length(analysis)) {
-        median[i] <- median(setup[[analysis[i]]])
+        mean[i] <- mean(setup[[analysis[i]]])
     }
     d <- data.frame(
-               Stat=rep(c('Peak', 'Meadian'), each=length(analysis)),
+               Stat=rep(c('Peak', 'Mean'), each=length(analysis)),
                Analysis=rep(analysis, 2),
-               Time=c(peak, median)
+               Time=c(peak, mean)
     )
     d$Analysis <- factor(d$Analysis, levels = c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt'))
     return(d)
@@ -80,24 +95,8 @@ plotScatter <- function(setup, title) {
 
 #------------------------------------------------------------------------------
 
-name = 'Shutdown improvements'
-analy_levels <- c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt')
-
 d <- read.csv(paste(name, '.csv', sep=''))
 time_max = max(1000)
-
-setup_name <- c(
-                'Baseline',
-                'Cache 256 KB',
-                'WiFi: exec(rmmod cc33xx',
-                'WiFi: rfkill',
-                'Killall',
-                'NonPCO no power down',
-                'NonPCO',
-                'PCO'
-)
-
-#------------------------------------------------------------------------------
 
 svg(paste(name, '.svg', sep=''), width=20, height=14)
 p1 <- plotScatter(extractSetup('Baseline'), 'Baseline')
