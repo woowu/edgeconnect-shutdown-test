@@ -4,6 +4,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(reshape2)
 library(gridExtra)
+library(grid)
 
 #------------------------------------------------------------------------------
 
@@ -61,13 +62,13 @@ createStatForSetup <- function(setup) {
                Analysis=rep(analysis, 3),
                Time=c(peak, mean, sigma)
     )
-    d$Analysis <- factor(d$Analysis, levels = c('Filesystem', 'WiFi', 'eMMC', 'Total', 'Batt'))
+    d$Analysis <- factor(d$Analysis, levels = analy_levels)
     return(d)
 }
 
 plotBattTime <- function(pco, npco) {
-    pco <- pco[pco > 0]
-    npco <- npco[npco > 0]
+    pco <- pco[pco > 0] * .8
+    npco <- npco[npco > 0] * .8
     d1 <- data.frame(Idx=1:length(pco), Time=pco, Type=rep('PCO', length(pco)))
     d2 <- data.frame(Idx=1:length(npco), Time=npco, Type=rep('NonPCO', length(npco)))
     d <- rbind(d1, d2)
@@ -149,7 +150,8 @@ npco <- extractSetup('NonPCO')
 png(filename=paste(name, '.png', sep=''), width=960, height=480)
 p1 <- plotOprs(baseline, 'Baseline')
 p2 <- plotOprs(rbind(pco, npco), 'Optimized')
-grid.arrange(p1, p2, top=name, nrow=1)
+grid.arrange(p1, p2, nrow=1,
+             top=textGrob(name, gp=gpar(fontsize=20)))
 dev.off()
 
 png(filename=paste('Battery time', '.png', sep=''))

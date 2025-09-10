@@ -85,8 +85,14 @@ function processLogLineInSingleTest(state, line, lineNumber)
     re = /De-assert.*EIC_REMAIN_ON/;
     m = msg.match(re);
     if (m) {
-        state.test.total = state.test.clock - state.test.powerDownStart;
         state.test.emmc = state.test.clock - state.test.emmcStart;
+
+        state.test.total = state.test.clock - state.test.powerDownStart;
+        /* In real case, we will not wait WiFi, so the extra waiting time for
+         * the WiFi should be removed.
+         */
+        if (state.test.wifi > state.test.filesystem)
+            state.test.total -= state.test.wifi - state.test.filesystem;
         return;
     }
 }
